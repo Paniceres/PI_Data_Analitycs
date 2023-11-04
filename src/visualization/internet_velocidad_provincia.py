@@ -1,10 +1,11 @@
 import sys
 import os
-import streamlit as st
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# from notebooks import main  # No parece que necesites importar main aquí
+import streamlit as st
+
+
 import pandas as pd
+import streamlit as st
 import plotly.express as px
 
 # Tu DataFrame original
