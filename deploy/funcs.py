@@ -4,99 +4,72 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
-
-class DataViz:
-    def __init__(self):
-        # Ruta al directorio donde se encuentran los archivos
-        self.data_directory = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'readytogo')
+from PIL import Image
+import io
 
 
-    def load_data(self):
-        # Lista de archivos en el directorio
-        files = os.listdir(self.data_directory)
-
-        # Diccionario para almacenar los DataFrames cargados
-        self.dataframes = {}
-
-        # Leer los DataFrames desde los archivos CSV
-        for file in files:
-            if file.endswith('.csv'):
-                file_path = os.path.join(self.data_directory, file)
-                dataframe_name = os.path.splitext(file)[0]  # Nombre del DataFrame sin extensión
-                self.dataframes[dataframe_name] = pd.read_csv(file_path)
-
-# Crear una instancia de la clase DataViz
-data_viz = DataViz()
-
-# Cargar los datos
-data_viz.load_data()
-
-# Acceder a los DataFrames cargados
-df_penetracion = data_viz.dataframes['penetracion']
-df_penetracion_ingresos = data_viz.dataframes['penetracion_ingresos']
-df_tecnologia_velocidad = data_viz.dataframes['tecnologia_velocidad']
-df_kpi = data_viz.dataframes['kpi']
-
-# Filtrar los datos para el año 2022 usando la variable de instancia self.df_kpi
-datos_2022 = df_kpi[df_kpi['Año'] == 2022]
-
-# Lista provincias_criterio
-provincias_criterio = datos_2022[datos_2022['Accesos por cada 100 hogares'] < 60]
-provincias_criterio = provincias_criterio['Provincia'].unique()
-
+def calcular_provincias_criterio(df_kpi):
+    datos_2022 = df_kpi[df_kpi['Año'] == 2022]
+    provincias_criterio = datos_2022[datos_2022['Accesos por cada 100 hogares'] < 60]
+    return provincias_criterio['Provincia'].unique()
 
 def plot_correlacion_hogar_hab(df_penetracion):
-    plt.figure(figsize=(10, 6))
+    st.subheader('Penetración de conectividad por año')
 
-    sns.lineplot(data=df_penetracion, x='Año', y='Accesos por cada 100 hogares', label='Accesos por cada 100 hogares')
-    sns.lineplot(data=df_penetracion, x='Año', y='Accesos por cada 100 hab', label='Accesos por cada 100 hab')
+    # Crear una figura para el gráfico
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    # Graficar los datos
+    sns.lineplot(data=df_penetracion, x='Año', y='Accesos por cada 100 hogares', label='Accesos por cada 100 hogares', ax=ax)
+    sns.lineplot(data=df_penetracion, x='Año', y='Accesos por cada 100 hab', label='Accesos por cada 100 hab', ax=ax)
 
     df_penetracion['Accesos por cada 3.24 hab'] = df_penetracion['Accesos por cada 100 hab'] * 3.24
-    sns.lineplot(data=df_penetracion, x='Año', y='Accesos por cada 3.24 hab', label='Accesos por cada 3.24 hab')
+    sns.lineplot(data=df_penetracion, x='Año', y='Accesos por cada 3.24 hab', label='Accesos por cada 3.24 hab', ax=ax)
 
+    # Configurar el gráfico
     plt.xlabel('Año')
     plt.ylabel('Accesos')
-    plt.title('Penetración de conectividad por año')
-    plt.grid()
+    plt.grid(True)
     plt.legend()
-    plt.show()
-    
-    text = '''
-    Notamos un aumento proporcionalmente correlacionado entre los accesos por cada 100 habitantes y 100 hogares.     
-    Hay una significativa diferencia entre la cantidad neta de accesos, por lo que el volumen de datos es distinto.     
-        Contemplando los datos del censo de 2010 de Argentina, extraemos el promedio general de habitantes que residen en un mismo hogar (3.24), 
-    multiplindo los accesos por cada 100 habitantes y observando así una completa correlación de los datos. 
-    El promedio de habitantes por hogar fue realizado por la Dirección General de Estadísticas y Censos (DGEC) de Argentina.
-    '''
-    return text
+
+    # Mostrar el gráfico en Streamlit
+    st.pyplot(fig)
+
+    # Texto explicativo
+    st.write(
+        """
+        Notamos una completa correlación de datos y tendencias entre los accesos cada 100 hogares y 100 habitantes.
+        El promedio de habitantes por hogar fue realizado por la Dirección General de Estadísticas y Censos (DGEC) de Argentina.
+        Decidimos quedarnos solo con el dato de accesos cada 100 hogares para evitar redundancias.
+        """
+    )
 
 def plot_criterio_provincia(df_kpi):
-    # Calcula el promedio de Accesos por cada 100 hogares para cada provincia en 2022
-    promedio_por_provincia_2022 = datos_2022.groupby('Provincia')['Accesos por cada 100 hogares'].mean().reset_index()
+   # Calcula el promedio de Accesos por cada 100 hogares para cada provincia en 2022
+   promedio_por_provincia_2022 = df_kpi[df_kpi['Año'] == 2022].groupby('Provincia')['Accesos por cada 100 hogares'].mean().reset_index()
 
-    # Crea un gráfico de barras para mostrar el promedio de Accesos por cada 100 hogares por provincia en 2022
-    plt.figure(figsize=(12, 6))
-    sns.barplot(x='Provincia', y='Accesos por cada 100 hogares', data=promedio_por_provincia_2022, palette='viridis')
-    plt.xlabel('Provincia')
-    plt.ylabel('Promedio de Accesos por cada 100 hogares')
-    plt.title('Promedio de Accesos por cada 100 hogares por Provincia en 2022')
-    plt.xticks(rotation=90)  
-    plt.grid(axis='y')
+   # Crea un gráfico de barras para mostrar el promedio de Accesos por cada 100 hogares por provincia en 2022
+   fig, ax = plt.subplots(figsize=(12, 6))
+   sns.barplot(x='Provincia', y='Accesos por cada 100 hogares', data=promedio_por_provincia_2022, palette='viridis', ax=ax)
+   ax.set_xlabel('Provincia')
+   ax.set_ylabel('Promedio de Accesos por cada 100 hogares')
+   ax.set_title('Promedio de Accesos por cada 100 hogares por Provincia en 2022')
+   ax.set_xticklabels(ax.get_xticklabels(), rotation=90) 
+   ax.grid(axis='y')
 
-    # Agrega una línea punteada en el valor 60
-    plt.axhline(y=60, color='red', linestyle='--', linewidth=2, label='Línea en 60')
+   # Agrega una línea punteada en el valor 60
+   ax.axhline(y=60, color='red', linestyle='--', linewidth=2, label='Línea en 60')
 
-    # Muestra el gráfico
-    plt.legend() 
-    plt.show()
-    
-    text = '''
-    Vemos el promedio de penetración de internet por cada 100 hogares por provincia,
-    son 10 las provincias que se encuentran por debajo al 60%. Serán objeto de análisis.
-    '''
-    return text
+   # Muestra el gráfico con Streamlit
+   st.pyplot(fig)
+   
+   text = '''
+   Vemos el promedio de penetración de internet por cada 100 hogares por provincia,
+   son 10 las provincias que se encuentran por debajo al 60%. Serán objeto de análisis.
+   '''
+   st.write(text)
 
-def plot_tasa_crecimiento_penetracion_criterio(df_kpi):
+def plot_tasa_crecimiento_penetracion_criterio(df_kpi, provincias_criterio):
     # Filtra los datos para las provincias con tasa de acceso por debajo del 60% en 2022
     provincias_filtradas = df_kpi[df_kpi['Provincia'].isin(provincias_criterio)]
 
@@ -115,21 +88,20 @@ def plot_tasa_crecimiento_penetracion_criterio(df_kpi):
     plt.title('Tasa de Crecimiento Promedio de Penetración por Año para Provincias con Acceso < 60% en 2022')
     plt.grid(True)
 
-    # Muestra el gráfico
-    plt.show()
-    
-    text = '''
-    Se observa una tendencia alcista en la tasa de penetración por cada 100 hogares, 
-    con una alta volatilidad en el corto plazo, esperamos estabilidad a largo plazo. 
-    Indagaremos en torno a los factores que volatilizan la tendencia.
-    
-    El factor económico siempre es el gran factor a considerar, encontramos un dataset donde detallan los ingresos en miles de pesos por trimestre. 
-    Ante el condicional de devaluación de la moneda pivote, consideramos convertir los datos a dolares, 
-    gracias a web scrapping https://www.exchange-rates.org/, 
-    obtuvimos los valores promedio de conversión del dolar por año y comparamos contra la sumatoria de la ingesta en miles de pesos por año.
-    '''
-    return text
+    # Guarda el gráfico como un archivo de imagen temporal
+    plt.savefig('temp_plot.png')
+    plt.close()
 
+    # Lee el archivo de imagen con Pillow
+    image = Image.open('temp_plot.png')
+
+    # Convierte la imagen a bytes para mostrarla en Streamlit
+    img_bytes = io.BytesIO()
+    image.save(img_bytes, format='PNG')
+    img_bytes.seek(0)
+
+    return img_bytes
+    
 def plot_correlacion_ingresos_dolar(df_kpi):
     # Calcula los promedios de ingresos por año
     promedios_por_año = df_kpi.groupby('Año')['Ingresos (miles de pesos)'].mean()
@@ -170,13 +142,20 @@ def plot_correlacion_ingresos_dolar(df_kpi):
 
     plt.title('Comparación entre Promedio de Ingresos y Valor del Dólar (Dólar Blue)')
     plt.grid(True)
-    plt.show()
     
-    text = '''
-    Se observa una tendencia alcista en la inversión año tras año, observamos una correlación entre los datos, 
-    ha de haber una estabilidad en la ingesta neta.
-    '''
-    return text
+    # Guarda el gráfico como un archivo de imagen temporal
+    plt.savefig('temp_correlacion_ingresos_dolar.png')
+    plt.close()
+
+    # Lee el archivo de imagen con Pillow
+    image = Image.open('temp_correlacion_ingresos_dolar.png')
+
+    # Convierte la imagen a bytes para mostrarla en Streamlit
+    img_bytes = io.BytesIO()
+    image.save(img_bytes, format='PNG')
+    img_bytes.seek(0)
+
+    return img_bytes
 
 def plot_dolares_ingresos_tasaIngresos(df_kpi):
     # Cálculo del promedio de ingresos por año en miles de dólares
@@ -218,14 +197,20 @@ def plot_dolares_ingresos_tasaIngresos(df_kpi):
 
     # Ajusta el espaciado entre subplots
     plt.tight_layout()
+    
+    # Guarda el gráfico como un archivo de imagen temporal
+    plt.savefig('temp_dolares_ingresos_tasaIngresos.png')
+    plt.close()
 
-    # Muestra los subplots
-    plt.show()
+    # Lee el archivo de imagen con Pillow
+    image = Image.open('temp_dolares_ingresos_tasaIngresos.png')
 
-    text = '''
-    Observamos una estabilidad a largo plazo en torno a una ingesta de 500.000usd. Corroboraremos la correlación entre la ingesta 
-    promedio en dolares contra la tasa de crecimiento promedio de los países en los que hacemos foco, los que tienen una tasa menor al 60%.'''
-    return text
+    # Convierte la imagen a bytes para mostrarla en Streamlit
+    img_bytes = io.BytesIO()
+    image.save(img_bytes, format='PNG')
+    img_bytes.seek(0)
+
+    return img_bytes
 
 def plot_dolares_ingresos_tasaPenetracion(df_kpi):
     # Cálculo del promedio de ingresos por año en miles de dólares
@@ -233,7 +218,7 @@ def plot_dolares_ingresos_tasaPenetracion(df_kpi):
     
     # Combina 'Año' y 'Trimestre' en un índice temporal temporalmente
     df_kpi['Año-Trimestre'] = df_kpi['Año'].astype(str) + '-' + df_kpi['Trimestre'].astype(str)
-    tasa_crecimiento_ingresos = df_kpi.groupby('Año-Trimestre')['Tasa de Crecimiento Ingresos'].mean()
+    tasa_crecimiento_penetracion = df_kpi.groupby('Año-Trimestre')['Tasa de Crecimiento Penetracion'].mean()
 
     # Restaura el dataframe original eliminando el índice temporal temporal
     del df_kpi['Año-Trimestre']
@@ -256,10 +241,10 @@ def plot_dolares_ingresos_tasaPenetracion(df_kpi):
     axes[0].legend()
 
     # Segundo subplot: Tasa de crecimiento de ingresos por año
-    axes[1].plot(tasa_crecimiento_ingresos.index, tasa_crecimiento_ingresos.values, marker='o', color='g', linestyle='-', linewidth=2, markersize=8)
+    axes[1].plot(tasa_crecimiento_penetracion.index, tasa_crecimiento_penetracion.values, marker='o', color='g', linestyle='-', linewidth=2, markersize=8)
     axes[1].set_xlabel('Año')
-    axes[1].set_ylabel('Tasa de Crecimiento de Ingresos (%)')
-    axes[1].set_title('Tasa de Crecimiento de Ingresos por Año')
+    axes[1].set_ylabel('Tasa de Crecimiento de Penetración (%)')
+    axes[1].set_title('Tasa de Crecimiento de Penetración por Año')
     axes[1].grid(True)
     axes[1].tick_params(axis='x', rotation=90) 
 
@@ -267,18 +252,20 @@ def plot_dolares_ingresos_tasaPenetracion(df_kpi):
     # Ajusta el espaciado entre subplots
     plt.tight_layout()
 
-    # Muestra los subplots
-    plt.show()
+    # Guarda el gráfico como un archivo de imagen temporal
+    plt.savefig('temp_dolares_ingresos_tasaPenetracion.png')
+    plt.close()
+
+    # Lee el archivo de imagen con Pillow
+    image = Image.open('temp_dolares_ingresos_tasaPenetracion.png')
+
+    # Convierte la imagen a bytes para mostrarla en Streamlit
+    img_bytes = io.BytesIO()
+    image.save(img_bytes, format='PNG')
+    img_bytes.seek(0)
+
+    return img_bytes
     
-    text = '''
-    Encontramos correlacionados los años desde 2014 hasta 2020, si bien los patrones de comportamiento son similares, 
-    correlacionandose anomalías y picos entre ambos, no hay una correlación en torno a la tendencia, refiero a que si bien aumenta 
-    la penetración del servicio a un mayor porcentaje de la población, no se traduce necesariamente en una mayor retribución económica para la empresa.             
-
-    No obstante, el año 2018 parece ser una anomalía no explicada aún, indagaremos este año por separado luego.
-    '''
-    return text
-
 def plot_correlacion_tasaIngresos_tasaPenetracion(df_kpi):
     # Combina 'Año' y 'Trimestre' en un índice temporal temporalmente
     df_kpi['Año-Trimestre'] = df_kpi['Año'].astype(str) + '-' + df_kpi['Trimestre'].astype(str)
@@ -386,5 +373,3 @@ def plot_correlacion_tecnologia_velocidad(df_kpi):
     # Ajustar el espacio entre subgráficos
     plt.tight_layout()
     st.pyplot(fig)
-
-plot_correlacion_tecnologia_velocidad(df_kpi)
