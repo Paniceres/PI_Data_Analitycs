@@ -8,10 +8,8 @@ from PIL import Image
 import io
 
 
-def calcular_provincias_criterio(df_kpi):
-    datos_2022 = df_kpi[df_kpi['Año'] == 2022]
-    provincias_criterio = datos_2022[datos_2022['Accesos por cada 100 hogares'] < 60]
-    return provincias_criterio['Provincia'].unique()
+
+# Contexto
 
 def plot_correlacion_hogar_hab(df_penetracion):
     st.subheader('Penetración de conectividad por año')
@@ -43,6 +41,68 @@ def plot_correlacion_hogar_hab(df_penetracion):
         Decidimos quedarnos solo con el dato de accesos cada 100 hogares para evitar redundancias.
         """
     )
+
+def plot_correlacion_ingresos_dolar(df_kpi):
+    # Calcula los promedios de ingresos por año
+    promedios_por_año = df_kpi.groupby('Año')['Ingresos (miles de pesos)'].mean()
+
+    # Diccionario con tasas de cambio de pesos a dólares (dólar blue)
+    tasas_de_cambio = {
+        2022: 0.007846,
+        2021: 0.01054,
+        2020: 0.01445,
+        2019: 0.02144,
+        2018: 0.03759,
+        2017: 0.06058,
+        2016: 0.06787,
+        2015: 0.1090,
+        2014: 0.1235
+    }
+
+    # Crea un DataFrame a partir del diccionario de tasas de cambio
+    df_tasas_de_cambio = pd.DataFrame(list(tasas_de_cambio.items()), columns=['Año', 'Tasa de Cambio Dólar Blue'])
+
+    # Calcula el valor del dólar en pesos argentinos
+    df_tasas_de_cambio['Valor del Dólar en Pesos'] = 1 / df_tasas_de_cambio['Tasa de Cambio Dólar Blue']
+
+    # Crea un gráfico de doble eje y para mostrar los promedios por año y el valor del dólar en pesos argentinos
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+
+    # Gráfico de promedios de ingresos por año
+    ax1.set_xlabel('Año')
+    ax1.set_ylabel('Promedio de Ingresos (miles de pesos)', color='tab:blue')
+    ax1.plot(promedios_por_año.index, promedios_por_año.values, marker='o', color='tab:blue', linestyle='-', linewidth=2, markersize=8)
+    ax1.tick_params(axis='y', labelcolor='tab:blue')
+
+    # Gráfico del valor del dólar en pesos argentinos en el segundo eje y
+    ax2 = ax1.twinx()
+    ax2.set_ylabel('Valor del Dólar en Pesos Argentinos', color='tab:red')
+    ax2.plot(df_tasas_de_cambio['Año'], df_tasas_de_cambio['Valor del Dólar en Pesos'], marker='o', color='tab:red', linestyle='-', linewidth=2, markersize=8)
+    ax2.tick_params(axis='y', labelcolor='tab:red')
+
+    plt.title('Comparación entre Promedio de Ingresos y Valor del Dólar (Dólar Blue)')
+    plt.grid(True)
+    
+    # Guarda el gráfico como un archivo de imagen temporal
+    plt.savefig('temp_correlacion_ingresos_dolar.png')
+    plt.close()
+
+    # Lee el archivo de imagen con Pillow
+    image = Image.open('temp_correlacion_ingresos_dolar.png')
+
+    # Convierte la imagen a bytes para mostrarla en Streamlit
+    img_bytes = io.BytesIO()
+    image.save(img_bytes, format='PNG')
+    img_bytes.seek(0)
+
+    return img_bytes
+
+def calcular_provincias_criterio(df_kpi):
+    datos_2022 = df_kpi[df_kpi['Año'] == 2022]
+    provincias_criterio = datos_2022[datos_2022['Accesos por cada 100 hogares'] < 60]
+    return provincias_criterio['Provincia'].unique()
+
+# Criterio
 
 def plot_criterio_provincia(df_kpi):
    # Calcula el promedio de Accesos por cada 100 hogares para cada provincia en 2022
@@ -102,61 +162,6 @@ def plot_tasa_crecimiento_penetracion_criterio(df_kpi, provincias_criterio):
 
     return img_bytes
     
-def plot_correlacion_ingresos_dolar(df_kpi):
-    # Calcula los promedios de ingresos por año
-    promedios_por_año = df_kpi.groupby('Año')['Ingresos (miles de pesos)'].mean()
-
-    # Diccionario con tasas de cambio de pesos a dólares (dólar blue)
-    tasas_de_cambio = {
-        2022: 0.007846,
-        2021: 0.01054,
-        2020: 0.01445,
-        2019: 0.02144,
-        2018: 0.03759,
-        2017: 0.06058,
-        2016: 0.06787,
-        2015: 0.1090,
-        2014: 0.1235
-    }
-
-    # Crea un DataFrame a partir del diccionario de tasas de cambio
-    df_tasas_de_cambio = pd.DataFrame(list(tasas_de_cambio.items()), columns=['Año', 'Tasa de Cambio Dólar Blue'])
-
-    # Calcula el valor del dólar en pesos argentinos
-    df_tasas_de_cambio['Valor del Dólar en Pesos'] = 1 / df_tasas_de_cambio['Tasa de Cambio Dólar Blue']
-
-    # Crea un gráfico de doble eje y para mostrar los promedios por año y el valor del dólar en pesos argentinos
-    fig, ax1 = plt.subplots(figsize=(10, 6))
-
-    # Gráfico de promedios de ingresos por año
-    ax1.set_xlabel('Año')
-    ax1.set_ylabel('Promedio de Ingresos (miles de pesos)', color='tab:blue')
-    ax1.plot(promedios_por_año.index, promedios_por_año.values, marker='o', color='tab:blue', linestyle='-', linewidth=2, markersize=8)
-    ax1.tick_params(axis='y', labelcolor='tab:blue')
-
-    # Gráfico del valor del dólar en pesos argentinos en el segundo eje y
-    ax2 = ax1.twinx()
-    ax2.set_ylabel('Valor del Dólar en Pesos Argentinos', color='tab:red')
-    ax2.plot(df_tasas_de_cambio['Año'], df_tasas_de_cambio['Valor del Dólar en Pesos'], marker='o', color='tab:red', linestyle='-', linewidth=2, markersize=8)
-    ax2.tick_params(axis='y', labelcolor='tab:red')
-
-    plt.title('Comparación entre Promedio de Ingresos y Valor del Dólar (Dólar Blue)')
-    plt.grid(True)
-    
-    # Guarda el gráfico como un archivo de imagen temporal
-    plt.savefig('temp_correlacion_ingresos_dolar.png')
-    plt.close()
-
-    # Lee el archivo de imagen con Pillow
-    image = Image.open('temp_correlacion_ingresos_dolar.png')
-
-    # Convierte la imagen a bytes para mostrarla en Streamlit
-    img_bytes = io.BytesIO()
-    image.save(img_bytes, format='PNG')
-    img_bytes.seek(0)
-
-    return img_bytes
-
 def plot_dolares_ingresos_tasaIngresos(df_kpi):
     # Cálculo del promedio de ingresos por año en miles de dólares
     promedios_por_año_dolares = df_kpi.groupby('Año')['Ingresos (miles USD)'].mean()
@@ -289,6 +294,11 @@ def plot_correlacion_tasaIngresos_tasaPenetracion(df_kpi):
     Observando al detalle, notamos la volatilidad de los datos, no se nota una correlación directa.'''  
     return text
 
+# penetracion kpi
+
+
+# tecnologia kpi
+#este
 def plot_promedio_velocidad(df_kpi):
     # Calcula el promedio de Mbps por provincia en 2022 para todas las provincias
     promedio_mbps_por_provincia_total = df_kpi[df_kpi['Año'] == 2022].groupby('Provincia')['Mbps (Media de bajada)'].mean()
@@ -334,6 +344,7 @@ def plot_tendencia_tecnologia(df_kpi):
     plt.tight_layout()
     plt.show()
 
+# y este para el kpi
 def plot_correlacion_tecnologia_velocidad(df_kpi):
     # Filtrar las provincias con un promedio de menos de 50 Mbps de bajada para el año 2022
     provincias_filtradas = df_kpi[df_kpi['Año'] == 2022].groupby('Provincia')['Mbps (Media de bajada)'].mean()
@@ -373,3 +384,5 @@ def plot_correlacion_tecnologia_velocidad(df_kpi):
     # Ajustar el espacio entre subgráficos
     plt.tight_layout()
     st.pyplot(fig)
+
+
