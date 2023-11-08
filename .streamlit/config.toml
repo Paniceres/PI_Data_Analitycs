@@ -1,1 +1,1 @@
-streamlit run deploy/main.py --server.port 8501
+streamlit run main.py --server.port 8501

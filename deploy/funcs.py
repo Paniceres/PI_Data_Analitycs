@@ -453,7 +453,7 @@ def calcular_alteracion_tecnologia(df_kpi, provincias_seleccionadas):
     correlacion_adsl_velocidad = -correlacion_tecnologia_velocidad['ADSL']
 
     porcentaje_aumento_velocidad = 20  # Aumento del 20%
-    disminucion_adsl_necesaria = (porcentaje_aumento_velocidad / 100) * correlacion_adsl_velocidad
+    disminucion_adsl_necesaria = (porcentaje_aumento_velocidad / 100) * correlacion_adsl_velocidad 
     aumento_fibra_necesaria = (porcentaje_aumento_velocidad / 100) * correlacion_fibra_velocidad
 
     # Calcular el total de accesos nuevos para ADSL y Fibra Óptica
