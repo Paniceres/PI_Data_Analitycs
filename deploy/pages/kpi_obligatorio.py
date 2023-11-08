@@ -11,13 +11,11 @@ df_kpi = data_load.dataframes['kpi']
 provincias_criterio = calcular_provincias_criterio(df_kpi)
 
 
-def show(df_kpi, provincias_criterio, filtro_activado=True):
-    st.sidebar.title("KPI Penetracion")
+def show(df_kpi, provincias_criterio, filtro_activado=True, tasa_mejora=None):
+    st.sidebar.title("KPI Obligatorio")
     st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.write("Relación: Tecnología y Penetración.")
-    st.write('''En torno a un KPI deseado del 10% de aumento en la penetración del servicio, 
-             determinamos la distribución de tecnologías en pos del objetivo''')
-    
+    st.write("Cantidad de accesos en relación al objetivo de mejora desesado")
+
    # Agrega un botón para activar o desactivar el filtro de provincias_criterio
     filtro_activado = st.checkbox("Filtrar por provincias seleccionadas", value=True)
 
@@ -41,10 +39,15 @@ def show(df_kpi, provincias_criterio, filtro_activado=True):
     if df_filtrado.empty:
         st.error("No hay datos disponibles para las provincias seleccionadas.")
         return
-
+    
+    st.sidebar.slider("Tasa de mejora", 0.0, 100.0, 2.0)
     # Calcular el KPI
-    kpi = kpi_obligatorio(df_filtrado, provincias_seleccionadas)
-
+    kpi = kpi_obligatorio(df_kpi, provincias_criterio, filtro_activado=True, tasa_mejora=tasa_mejora)
     # Mostrar el KPI
     st.write(f"KPI: {kpi:.2f}")
 
+    # Crear un slider para seleccionar la tasa de mejora
+    tasa_mejora = st.slider("Tasa de mejora", 0.0, 100.0, 2.0)
+
+    # Mostrar el KPI con la tasa de mejora seleccionada
+    show(df_kpi, provincias_criterio, filtro_activado=True, tasa_mejora=tasa_mejora)
