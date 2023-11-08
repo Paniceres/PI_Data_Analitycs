@@ -25,6 +25,9 @@ En contraste, tecnologías como ADSL, que dependen de conexiones por cable, pued
     st.set_option('deprecation.showPyplotGlobalUse', False)
     st.write("Título")
     st.write("Subtítulo")
+    
+   # Agrega un botón para activar o desactivar el filtro de provincias_criterio
+    filtro_activado = st.checkbox("Filtrar por provincias seleccionadas", value=True)
 
     # Agrega un botón para activar o desactivar el filtro de provincias_criterio
     if filtro_activado:
@@ -34,8 +37,7 @@ En contraste, tecnologías como ADSL, que dependen de conexiones por cable, pued
 
         # Si no se selecciona ninguna provincia y el filtro está activado, mostrar un mensaje de error
         if not provincias_seleccionadas:
-            st.error("Debes seleccionar al menos una provincia.")
-            return
+            provincias_seleccionadas = opciones_provincias
     else:
         # Si el filtro no está activado, mostrar todas las provincias
         provincias_seleccionadas = list(provincias_criterio)
@@ -43,6 +45,11 @@ En contraste, tecnologías como ADSL, que dependen de conexiones por cable, pued
     # Filtrar el DataFrame según las provincias seleccionadas
     df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_seleccionadas)]
 
+    # Verificar si hay datos después de aplicar el filtro
+    if df_filtrado.empty:
+        st.error("No hay datos disponibles para las provincias seleccionadas.")
+        return
+    
     # Llama a la función para mostrar el gráfico interactivo de promedio de penetracion
     plot_promedio_penetracion_interactivo(df_filtrado, provincias_criterio, filtro_activado)
 

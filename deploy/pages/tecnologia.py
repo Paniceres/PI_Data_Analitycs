@@ -47,14 +47,14 @@ def show(df_kpi, provincias_criterio):
 
     # Llama a la función para mostrar el gráfico de correlación entre tecnologías y velocidad
     plot_correlacion_tecnologia_velocidad(df_filtrado, provincias_criterio, filtro_activado)
-
-    # Obtener los valores de los KPIs
-        # Si no se selecciona ninguna provincia y el filtro está activado, mostrar un mensaje de error
-    if filtro_activado and not provincias_seleccionadas:
-        st.error("Debes seleccionar al menos una provincia.")
-    else:
-        # Calcular las alteraciones en tecnología
+    
+    try:
+        # Obtener los valores de los KPIs
         disminucion_adsl_necesaria, aumento_fibra_necesaria, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra = calcular_alteracion_tecnologia(df_kpi, provincias_seleccionadas, filtro_activado)
+    except ValueError as e:
+        st.error(str(e))
+        return
+    
 
     # Mostrar los KPIs como tarjetas
     st.write("### Aumento de Velocidad en un 10% Trimestral")
