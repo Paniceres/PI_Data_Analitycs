@@ -1,6 +1,7 @@
 numpy
+pyarrow
 pandas
-matplotlib
-seaborn
 streamlit
 Pillow
+matplotlib
+seaborn
