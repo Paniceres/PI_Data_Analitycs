@@ -4,7 +4,7 @@ from funcs import (plot_promedio_velocidad_interactivo, calcular_provincias_crit
 from data_loader import DataLoader
 
 # Crear una instancia de la clase DataLoader
-data_load = DataLoader(data_directory='../../data/readytogo')
+data_load = DataLoader(data_directory='./data/readytogo')
 data_load.load_data()
 df_kpi = data_load.dataframes['kpi']
 

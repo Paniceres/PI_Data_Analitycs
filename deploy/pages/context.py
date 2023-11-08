@@ -4,7 +4,7 @@ from funcs import calcular_provincias_criterio, plot_correlacion_hogar_hab, plot
 from data_loader import DataLoader
 
 # Crear una instancia de la clase DataLoader
-data_load = DataLoader(data_directory='../../data/readytogo')
+data_load = DataLoader(data_directory='./data/readytogo')
 data_load.load_data()
 df_kpi = data_load.dataframes['kpi']
 df_penetracion = data_load.dataframes['penetracion']
