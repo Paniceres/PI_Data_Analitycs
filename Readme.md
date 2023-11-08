@@ -23,7 +23,7 @@
     <a href="https://github.com/Paniceres/PI_Data_Analytics"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="#Deploy">View Deploy</a>
+    <a href="https://enacom-data-analytics-paniceres.streamlit.app/">View Deploy</a>
     ·
     <a href="https://github.com/Paniceres/PI_Data_Analytics/issues">Report Bug</a>
     ·
@@ -110,7 +110,7 @@ This is an example of how to list things you need to use the software and how to
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-<a href="#Deploy">View Deploy</a>
+<a href="https://enacom-data-analytics-paniceres.streamlit.app/">View Deploy</a>
 
 <img src="/src/usage.png" alt="Streamlit localhost" width="1000" height="520">
 
