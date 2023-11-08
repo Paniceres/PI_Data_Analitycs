@@ -13,6 +13,8 @@ class DataLoader:
                 file_path = os.path.join(self.data_directory, file)
                 dataframe_name = os.path.splitext(file)[0]
                 self.dataframes[dataframe_name] = pd.read_csv(file_path)
+        else:
+            print(f"Error: El directorio '{self.data_directory}' no existe.")
 
     def get_dataframes(self):
         return self.dataframes

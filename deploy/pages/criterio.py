@@ -9,8 +9,8 @@ from funcs import (
 )
 from data_loader import DataLoader
 
-# Crear una instancia de la clase DataViz
-data_load = DataLoader(data_directory='../data/readytogo')
+# Crear una instancia de la clase DataLoader
+data_load = DataLoader(data_directory='../../data/readytogo')
 data_load.load_data()
 df_kpi = data_load.dataframes['kpi']
 

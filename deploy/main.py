@@ -15,6 +15,7 @@ from pages.penetracion import show as Penetracion
 from pages.tecnologia import show as Tecnologia
 
 # Crear una instancia de la clase DataViz
+print("Ruta del directorio:", self.data_directory)
 data_load = DataLoader(data_directory='../data/readytogo')
 data_load.load_data()
 
