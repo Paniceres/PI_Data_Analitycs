@@ -11,8 +11,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/ENACOM/DataAnalyticsProject">
-    <img src="/src/enacom_project_logo.png" alt="Logo" width="575" height="380">
+  <a href="https://github.com/Paniceres/PI_Data_Analytics">
+    <img src="/src/ENACOM_logo.png" alt="Logo" width="500" height="225">
   </a>
 
 <h3 align="center">ENACOM Data Analytics Project</h3>
@@ -20,14 +20,14 @@
   <p align="center">
     Data Analysis for Network Optimization
     <br />
-    <a href="https://github.com/ENACOM/DataAnalyticsProject"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/Paniceres/PI_Data_Analytics"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="#">View Demo</a>
     ·
-    <a href="https://github.com/ENACOM/DataAnalyticsProject/issues">Report Bug</a>
+    <a href="https://github.com/Paniceres/PI_Data_Analytics/issues">Report Bug</a>
     ·
-    <a href="https://github.com/ENACOM/DataAnalyticsProject/issues">Request Feature</a>
+    <a href="https://github.com/Paniceres/PI_Data_Analytics/issues">Request Feature</a>
   </p>
 </div>
 
@@ -50,6 +50,7 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#methodology">Methodology</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -63,12 +64,14 @@ ENACOM, a leading telecommunications company, seeks to improve its network optim
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
-
+* [![NumPy][NumPy-logo]][NumPy-url]
 * [![Pandas][Pandas-logo]][Pandas-url]
 * [![Python][Python-logo]][Python-url]
-* [![Scikit-Learn][Scikit-Learn-logo]][Scikit-Learn-url]
-* [![NumPy][NumPy-logo]][NumPy-url]
+* [![Matplotlib][Matplotlib-logo]][Matplotlib-url]
+* [![Seaborn][Seaborn-logo]][Seaborn-url]
 * [![Streamlit][Streamlit-logo]][Streamlit-url]
+* [![PyArrow][PyArrow-logo]][PyArrow-url]
+* [![Manjaro][Manjaro-logo]][Manjaro-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -116,32 +119,50 @@ No encontré forma de ocultar los nombres de los modulos, solo usar la casilla i
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- METHODOLOGY -->
-Methodology
+# Methodology
 
 The methodology employed in this project involved the following key steps:
-Data Extract, Transform, and Load (ETL)
+**Data context and criterion; Extract, Transform and Load; Data Anlalysis; Deploy**
 
 Over 30 available datasets were analyzed, and a set of criteria was imposed to optimize efforts. The selected 12 datasets were processed through ETL processes, resulting in the creation of tables containing ratios and growth rates.
 Data Analysis
 
-A comprehensive dataset, df_kpi, was generated from the processed data, serving as the basis for all visualizations and analyses. The economic landscape of modern Argentina was explored by understanding various correlations among technologies, growth rates, penetration totals (access rates, service availability), and speed (service quality).
+A comprehensive dataset, **df_kpi**, was generated from the processed data, serving as the basis for all visualizations and analyses. The economic landscape of modern Argentina was explored by understanding various correlations among technologies, growth rates, penetration totals (access rates, service availability), and speed (service quality).
 Deployment Challenges
 
 The deployment phase presented several technical challenges, particularly during the creation of the multi-app interactive dashboard. One significant challenge involved standardizing the project's directory structure to streamline data processing. Ensuring the interactivity of the dashboard required considerable effort and attention to detail.
-Key Technical Challenges Faced During Deployment:
 
-    Data Processing Optimization: Efficient processing of large datasets was crucial. Techniques like data chunking and parallel processing were employed to optimize data processing speed and performance.
-    Visualization Interactivity: Making the dashboard interactive and responsive to user inputs was a priority. This required implementing interactive widgets and ensuring seamless communication between different components of the dashboard.
-    Data Integration: Integrating diverse datasets and ensuring consistency across different data sources was a challenge. Data cleaning and transformation procedures were meticulously applied to harmonize the data and prevent inconsistencies.
-    Real-time Updates: Implementing real-time data updates to reflect changes dynamically was a complex task. Strategies such as data caching and periodic data refresh mechanisms were employed to strike a balance between real-time updates and system performance.
-    User Experience Design: Designing an intuitive and user-friendly interface was critical for ensuring a positive user experience. User interface elements were carefully chosen, and user feedback was incorporated to refine the design and enhance usability.
+## Key Technical Challenges Faced During Deployment:
 
-Resulting Visualizations and Analyses
+ ### Data Processing Optimization: 
+  Efficient processing of multiple datasets was crucial.
+  
+ ### Visualization Interactivity: 
+  Making the dashboard interactive and responsive to user inputs was a priority. This required implementing interactive widgets and ensuring seamless communication between different components of the dashboard.
+  
+ ### Data Integration: 
+  Integrating diverse datasets and ensuring consistency across different data sources was a challenge. Data cleaning and transformation procedures were meticulously applied to harmonize the data and prevent inconsistencies.
+  
+ ### User Experience Design: 
+  Designing an intuitive and user-friendly interface was critical for ensuring a positive user experience. User interface elements were carefully chosen, and user feedback was incorporated to refine the design and enhance usability.
+
+## Resulting Visualizations and Analyses
 
 The project culminated in a multi-app interactive dashboard that enables users to explore and analyze the economic landscape of modern Argentina. The dashboard provides insights into various aspects of the country's economy, including growth rates, penetration totals, service availability, and speed.
 Conclusion
 
-The methodology employed in this project effectively enabled the creation of a comprehensive and interactive dashboard that offers valuable insights into the economic landscape of modern Argentina. By understanding the correlations among different metrics and visualizing them on a single platform, users can make informed decisions and optimize their strategies accordingly.
+The methodology employed in this project effectively enabled the creation of a comprehensive and interactive dashboard that offers valuable insights into the landscape of modern Argentina. By understanding the correlations among different metrics and visualizing them on a single platform, users can make informed decisions and optimize their strategies accordingly.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CONCLUSION -->
+# Conclusion
+
+Upon analyzing the net income trends in dollars, with its relative **stability around $500,000 USD**, we decided to interpret correlation patterns with other non-economic variables. We observed how **Fiber Optics stands out as the central focus of the proposal**, being the most cost-effective to install, increasing average speed, and enhancing connectivity rates for every province where it is implemented.
+
+It is crucial to understand that Fiber Optics has an inverse correlation with ADSL, a technology that needs to be reduced. ADSL not only lacks technical features that favor accessibility or service quality but is also susceptible to theft due to its high copper content.
+
+Wireless technology emerges as the one suggesting the highest connectivity, excelling in both rural and densely populated areas, owing to its wireless nature.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -163,20 +184,39 @@ Don't forget to give the project a star! Thanks again!
 
 <!-- CONTACT -->
 ## Contact
+Paniceres Lucio - panicereslucio@gmail.com
 
-Your Name - your.email@example.com
-
-Project Link: [https://github.com/ENACOM/DataAnalyticsProject](https://github.com/ENACOM/DataAnalyticsProject)
+Project Link: [https://github.com/Paniceres/PI_Data_Analytics](https://github.com/Paniceres/PI_Data_Analytics)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/ENACOM/DataAnalyticsProject.svg?style=for-the-badge
-[contributors-url]: https://github.com/ENACOM/DataAnalyticsProject/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/ENACOM/DataAnalyticsProject.svg?style=for-the-badge
-[forks-url]: https://github.com/ENACOM/DataAnalyticsProject/network/members
-[stars-shield]: https://img.shields.io/github/stars/ENACOM/DataAnalyticsProject.svg?style=for-the-badge
-[stars-url]: https://github.com/ENACOM/DataAnalyticsProject/stargazers
-[issues-shield]: https://img.shields.io/github/issues/ENACOM/DataAnalytics```
+[contributors-shield]: https://img.shields.io/github/contributors/Panniceres/PI_Data_Analytics.svg?style=for-the-badge
+[contributors-url]: https://github.com/Panniceres/PI_Data_Analytics/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Panniceres/PI_Data_Analytics.svg?style=for-the-badge
+[forks-url]: https://github.com/Panniceres/PI_Data_Analytics/network/members
+[stars-shield]: https://img.shields.io/github/stars/Panniceres/PI_Data_Analytics.svg?style=for-the-badge
+[stars-url]: https://github.com/Panniceres/PI_Data_Analytics/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Panniceres/PI_Data_Analytics```
 
+
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://www.linkedin.com/in/paniceres-lucio/
+
+[NumPy-logo]: https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white
+[NumPy-url]: https://numpy.org/
+[Pandas-logo]: https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white
+[Pandas-url]: https://pandas.pydata.org/
+[Python-logo]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
+[Python-url]: https://www.python.org/
+[Matplotlib-logo]: https://img.shields.io/badge/Matplotlib-3776AB?style=for-the-badge&logo=python&logoColor=white
+[Matplotlib-url]: https://matplotlib.org/
+[Seaborn-logo]: https://img.shields.io/badge/Seaborn-3776AB?style=for-the-badge&logo=python&logoColor=white
+[Seaborn-url]: https://seaborn.pydata.org/
+[Streamlit-logo]: https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white
+[Streamlit-url]: https://streamlit.io/
+[PyArrow-logo]: https://img.shields.io/badge/PyArrow-F63E02?style=for-the-badge&logo=apache-arrow&logoColor=white
+[PyArrow-url]: https://arrow.apache.org/pyarrow/
+[Manjaro-logo]: https://img.shields.io/badge/Manjaro-35BF5C?style=for-the-badge&logo=manjaro&logoColor=white
+[Manjaro-url]: https://manjaro.org/
