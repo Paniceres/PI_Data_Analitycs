@@ -16,6 +16,7 @@ from pages.context import show as Contexto
 from pages.criterio import show as Criterio
 from pages.penetracion import show as Penetracion
 from pages.tecnologia import show as Tecnologia
+from pages.kpi_obligatorio import show as KPI_obligatorio
 
 # Crear una instancia de la clase DataViz
 data_load = DataLoader(data_directory='./data/readytogo')
@@ -49,7 +50,7 @@ except FileNotFoundError:
 st.title('Proyecto: Análisis de ENACOM: Calidad y Penetración de servicio en torno a tecnologías.')
 
 pagina_seleccionada = st.sidebar.radio('Selecciona una página:',
-                                       ['Contexto', 'Criterio', 'Penetración', 'Tecnología'])
+                                       ['Contexto', 'Criterio', 'Penetración', 'Tecnología', 'KPI Obligatorio'])
 
 
 
@@ -61,6 +62,8 @@ elif pagina_seleccionada == 'Penetración':
     Penetracion(df_kpi, provincias_criterio)  
 elif pagina_seleccionada == 'Tecnología':
     Tecnologia(df_kpi, provincias_criterio)  
+elif pagina_seleccionada == 'KPI Obligatorio':
+    KPI_obligatorio(df_kpi, provincias_criterio)
 
 
     
