@@ -49,7 +49,7 @@ def show(df_kpi, provincias_criterio):
     plot_correlacion_tecnologia_velocidad(df_filtrado, provincias_criterio, filtro_activado)
 
     # Obtener los valores de los KPIs
-    disminucion_adsl_necesaria, aumento_fibra_necesaria, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra = calcular_alteracion_tecnologia(df_kpi, provincias_seleccionadas)
+    disminucion_adsl_necesaria, aumento_fibra_necesaria, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra = calcular_alteracion_tecnologia(df_kpi, provincias_criterio)
 
     # Mostrar los KPIs como tarjetas
     st.write("### Aumento de Velocidad en un 10% Trimestral")

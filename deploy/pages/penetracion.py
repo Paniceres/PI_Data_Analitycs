@@ -56,7 +56,7 @@ En contraste, tecnologías como ADSL, que dependen de conexiones por cable, pued
     plot_correlacion_tecnologia_penetracion(df_filtrado, provincias_criterio, filtro_activado)
 
     # Obtener los valores de los KPIs
-    disminucion_adsl_necesaria, aumento_fibra_necesaria, aumento_wireless_necesario, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra, total_accesos_nuevos_wireless = calcular_alteracion_penetracion(df_kpi, provincias_seleccionadas)
+    disminucion_adsl_necesaria, aumento_fibra_necesaria, aumento_wireless_necesario, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra, total_accesos_nuevos_wireless = calcular_alteracion_penetracion(df_kpi, provincias_criterio)
 
     # Mostrar los KPIs como tarjetas
     st.write("### Aumento de Velocidad en un 10% Trimestral")

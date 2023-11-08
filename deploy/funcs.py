@@ -429,7 +429,8 @@ def calcular_alteracion_penetracion(df_kpi, provincias_seleccionadas):
     aumento_wireless_necesario = total_accesos_nuevos_wireless / df_filtrado['Total Tecnologia'].sum() * 100
 
     return disminucion_adsl_necesaria, aumento_fibra_necesaria, aumento_wireless_necesario, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra, total_accesos_nuevos_wireless
-    
+
+ 
 # calidad, tecnologia kpi
 
 def plot_promedio_velocidad(df_kpi):
@@ -531,7 +532,10 @@ def plot_correlacion_tecnologia_velocidad(df_kpi, provincias_criterio, filtro_ac
     # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
     
-def calcular_alteracion_tecnologia(df_filtrado):
+def calcular_alteracion_tecnologia(df_kpi, provincias_criterio):
+    # Filtrar el dataframe según las provincias seleccionadas
+    df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_criterio)]
+
     # Calcular las correlaciones entre las tecnologías y el número de accesos por cada 100 hogares
     correlacion_tecnologia_penetracion = df_filtrado[['ADSL', 'Fibra optica', 'Accesos por cada 100 hogares']].corr()['Accesos por cada 100 hogares']
     correlacion_fibra_penetracion = correlacion_tecnologia_penetracion['Fibra optica']
