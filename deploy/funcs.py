@@ -405,7 +405,6 @@ def plot_correlacion_tecnologia_penetracion(df_kpi, provincias_criterio, filtro_
     # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
 
-
 def calcular_alteracion_penetracion(df_kpi, provincias_seleccionadas):
     # Filtrar el dataframe según las provincias seleccionadas
     df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_seleccionadas)]
@@ -416,16 +415,20 @@ def calcular_alteracion_penetracion(df_kpi, provincias_seleccionadas):
     correlacion_adsl_penetracion = -correlacion_tecnologia_penetracion['ADSL']
     correlacion_wireless_penetracion = correlacion_tecnologia_penetracion['Wireless']
 
-    porcentaje_aumento_penetracion = 10  # Aumento del 10% para un año
+    porcentaje_aumento_penetracion = 10  # Aumento del 10% para un trimestre
 
     # Calcular el total de accesos nuevos para un trimestre (ajustado desde el valor anual)
     df_filtrado['Total Tecnologia Trimestral'] = df_filtrado['Total Tecnologia'] / 4  # Dividir por 4 para obtener datos trimestrales
-    total_accesos_nuevos_adsl = (porcentaje_aumento_penetracion / 100) * correlacion_adsl_penetracion * df_filtrado['Total Tecnologia Trimestral']
-    total_accesos_nuevos_fibra = (porcentaje_aumento_penetracion / 100) * correlacion_fibra_penetracion * df_filtrado['Total Tecnologia Trimestral']
-    total_accesos_nuevos_wireless = (porcentaje_aumento_penetracion / 100) * correlacion_wireless_penetracion * df_filtrado['Total Tecnologia Trimestral']
+    total_accesos_nuevos_adsl = (porcentaje_aumento_penetracion / 100) * correlacion_adsl_penetracion * df_filtrado['Total Tecnologia Trimestral'].sum()
+    total_accesos_nuevos_fibra = (porcentaje_aumento_penetracion / 100) * correlacion_fibra_penetracion * df_filtrado['Total Tecnologia Trimestral'].sum()
+    total_accesos_nuevos_wireless = (porcentaje_aumento_penetracion / 100) * correlacion_wireless_penetracion * df_filtrado['Total Tecnologia Trimestral'].sum()
 
-    return total_accesos_nuevos_adsl, total_accesos_nuevos_fibra, total_accesos_nuevos_wireless
+    # Calcular la disminución o aumento necesario para cada tecnología
+    disminucion_adsl_necesaria = -total_accesos_nuevos_adsl / df_filtrado['Total Tecnologia'].sum() * 100
+    aumento_fibra_necesaria = total_accesos_nuevos_fibra / df_filtrado['Total Tecnologia'].sum() * 100
+    aumento_wireless_necesario = total_accesos_nuevos_wireless / df_filtrado['Total Tecnologia'].sum() * 100
 
+    return disminucion_adsl_necesaria, aumento_fibra_necesaria, aumento_wireless_necesario, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra, total_accesos_nuevos_wireless
     
 # calidad, tecnologia kpi
 

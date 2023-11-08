@@ -56,7 +56,7 @@ En contraste, tecnologías como ADSL, que dependen de conexiones por cable, pued
     plot_correlacion_tecnologia_penetracion(df_filtrado, provincias_criterio, filtro_activado)
 
     # Obtener los valores de los KPIs
-    disminucion_adsl_necesaria, aumento_fibra_necesaria, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra = calcular_alteracion_penetracion(df_kpi, provincias_seleccionadas)
+    disminucion_adsl_necesaria, aumento_fibra_necesaria, aumento_wireless_necesario, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra, total_accesos_nuevos_wireless = calcular_alteracion_penetracion(df_kpi, provincias_seleccionadas)
 
     # Mostrar los KPIs como tarjetas
     st.write("### Aumento de Velocidad en un 20%")
@@ -70,7 +70,13 @@ En contraste, tecnologías como ADSL, que dependen de conexiones por cable, pued
             Aumentar Fibra Óptica en {aumento_fibra_necesaria:.2f}%, equivalente a: {total_accesos_nuevos_fibra:.0f} accesos
         </div>
     """
+    tarjeta_wireless_html = f"""
+        <div style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: .25rem; padding: .75rem 1.25rem; cursor: pointer;" onclick="wirelessClicked()">
+            Aumentar Wireless en {aumento_wireless_necesario:.2f}%, equivalente a: {total_accesos_nuevos_wireless:.0f} accesos
+        </div>
+    """
 
     # Muestra las tarjetas en Streamlit
     st.markdown(tarjeta_adsl_html, unsafe_allow_html=True)
     st.markdown(tarjeta_fibra_html, unsafe_allow_html=True)
+    st.markdown(tarjeta_wireless_html, unsafe_allow_html=True)
