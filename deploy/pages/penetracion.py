@@ -13,7 +13,7 @@ provincias_criterio = calcular_provincias_criterio(df_kpi)
 
 
 
-def show(df_kpi, provincias_criterio):
+def show(df_kpi, provincias_criterio, filtro_activado=True):
     st.sidebar.title("KPI Penetracion")
     st.write('''
              Al analizar los datos, encontramos que la tecnología inalámbrica (como 4G o 5G) muestra una correlación positiva 
@@ -27,16 +27,15 @@ En contraste, tecnologías como ADSL, que dependen de conexiones por cable, pued
     st.write("Subtítulo")
 
     # Agrega un botón para activar o desactivar el filtro de provincias_criterio
-    filtro_activado = st.checkbox("Filtrar por provincias seleccionadas", value=True)
-
     if filtro_activado:
         # Obtener las opciones de provincias_criterio y permitir múltiple selección
         opciones_provincias = list(provincias_criterio)
         provincias_seleccionadas = st.multiselect("Selecciona provincias", opciones_provincias, default=opciones_provincias)
 
-        # Si no se selecciona ninguna provincia, considerar todas las provincias seleccionadas
+        # Si no se selecciona ninguna provincia y el filtro está activado, mostrar un mensaje de error
         if not provincias_seleccionadas:
-            provincias_seleccionadas = opciones_provincias
+            st.error("Debes seleccionar al menos una provincia.")
+            return
     else:
         # Si el filtro no está activado, mostrar todas las provincias
         provincias_seleccionadas = list(provincias_criterio)
@@ -44,19 +43,18 @@ En contraste, tecnologías como ADSL, que dependen de conexiones por cable, pued
     # Filtrar el DataFrame según las provincias seleccionadas
     df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_seleccionadas)]
 
-    # Verificar si hay datos después de aplicar el filtro
-    if df_filtrado.empty:
-        st.error("No hay datos disponibles para las provincias seleccionadas.")
-        return
-
     # Llama a la función para mostrar el gráfico interactivo de promedio de penetracion
     plot_promedio_penetracion_interactivo(df_filtrado, provincias_criterio, filtro_activado)
 
     # Llama a la función para mostrar el gráfico de correlación entre tecnologías y penetracion
     plot_correlacion_tecnologia_penetracion(df_filtrado, provincias_criterio, filtro_activado)
 
-    # Obtener los valores de los KPIs
-    disminucion_adsl_necesaria, aumento_fibra_necesaria, aumento_wireless_necesario, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra, total_accesos_nuevos_wireless = calcular_alteracion_penetracion(df_kpi, provincias_criterio)
+    try:
+        # Obtener los valores de los KPIs
+        disminucion_adsl_necesaria, aumento_fibra_necesaria, aumento_wireless_necesario, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra, total_accesos_nuevos_wireless = calcular_alteracion_penetracion(df_kpi, provincias_seleccionadas, filtro_activado)
+    except ValueError as e:
+        st.error(str(e))
+        return
 
     # Mostrar los KPIs como tarjetas
     st.write("### Aumento de Velocidad en un 10% Trimestral")

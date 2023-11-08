@@ -405,9 +405,12 @@ def plot_correlacion_tecnologia_penetracion(df_kpi, provincias_criterio, filtro_
     # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
 
-def calcular_alteracion_penetracion(df_kpi, provincias_seleccionadas):
+def calcular_alteracion_penetracion(df_kpi, provincias_seleccionadas, filtro_activado=True):
     # Filtrar el dataframe según las provincias seleccionadas
-    df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_seleccionadas)]
+    if filtro_activado:
+        df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_seleccionadas)]
+    else:
+        df_filtrado = df_kpi
 
     # Calcular las correlaciones entre las tecnologías y el número de accesos por cada 100 hogares
     correlacion_tecnologia_penetracion = df_filtrado[['ADSL', 'Fibra optica', 'Wireless', 'Accesos por cada 100 hogares']].corr()['Accesos por cada 100 hogares']
@@ -532,9 +535,14 @@ def plot_correlacion_tecnologia_velocidad(df_kpi, provincias_criterio, filtro_ac
     # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
     
-def calcular_alteracion_tecnologia(df_kpi, provincias_criterio):
-    # Filtrar el dataframe según las provincias seleccionadas
-    df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_criterio)]
+
+def calcular_alteracion_tecnologia(df_kpi, provincias_seleccionadas, filtro_activado):
+    if filtro_activado:
+        # Filtrar el dataframe según las provincias seleccionadas
+        df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_seleccionadas)]
+    else:
+        # Si el filtro no está activado, usar todas las provincias
+        df_filtrado = df_kpi.copy()
 
     # Calcular las correlaciones entre las tecnologías y el número de accesos por cada 100 hogares
     correlacion_tecnologia_penetracion = df_filtrado[['ADSL', 'Fibra optica', 'Accesos por cada 100 hogares']].corr()['Accesos por cada 100 hogares']
