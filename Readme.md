@@ -198,9 +198,8 @@ Project Link: [https://github.com/Paniceres/PI_Data_Analytics](https://github.co
 [forks-url]: https://github.com/Panniceres/PI_Data_Analytics/network/members
 [stars-shield]: https://img.shields.io/github/stars/Panniceres/PI_Data_Analytics.svg?style=for-the-badge
 [stars-url]: https://github.com/Panniceres/PI_Data_Analytics/stargazers
-[issues-shield]: https://img.shields.io/github/issues/Panniceres/PI_Data_Analytics```
-
-
+[issues-shield]: https://img.shields.io/github/issues/Panniceres/PI_Data_Analytics.svg?style=for-the-badge
+[issues-url]: https://github.com/Paniceres/PI_Data_Analytics/issues
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/paniceres-lucio/
 
