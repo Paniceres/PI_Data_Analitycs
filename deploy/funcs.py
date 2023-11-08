@@ -330,10 +330,108 @@ def plot_matriz_correlacion_penetracion_interactiva(df_kpi, provincias_criterio)
     plt.tight_layout()
     st.pyplot()
     
+def plot_promedio_penetracion(df_kpi):
+    # Calcula el promedio de Accesos por cada 100 hogares por provincia en 2022 para todas las provincias
+    promedio_accesos_por_provincia_total = df_kpi[df_kpi['Año'] == 2022].groupby('Provincia')['Accesos por cada 100 hogares'].mean()
+
+    # Filtra las provincias en provincias_menores_al_60_list
+    df_provincias_menores_al_60 = df_kpi[df_kpi['Provincia'].isin(provincias_criterio)]
+
+    # Calcula el promedio de Accesos por cada 100 hogares por provincia en 2022 para las provincias en provincias_menores_al_60_list
+    promedio_accesos_por_provincia_menores_al_60 = df_provincias_menores_al_60[df_provincias_menores_al_60['Año'] == 2022].groupby('Provincia')['Accesos por cada 100 hogares'].mean()
+
+    # Crea el gráfico de barras para las provincias en provincias_menores_al_60_list en 2022
+    plt.figure(figsize=(12, 6))
+    sns.barplot(x=promedio_accesos_por_provincia_menores_al_60.index, y=promedio_accesos_por_provincia_menores_al_60.values, palette='viridis')
+    plt.axhline(y=60, color='red', linestyle='--', label='60 Accesos por cada 100 hogares')
+    plt.xlabel('Provincia')
+    plt.ylabel('Promedio de Accesos por cada 100 hogares')
+    plt.title('Promedio de Accesos por cada 100 hogares por Provincia en 2022 (Provincias Menores al 60% de penetración)')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()    
+
+def plot_promedio_penetracion_interactivo(df_kpi, provincias_criterio, filtro_activado=True):
+    if filtro_activado:
+        df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_criterio)]
+    else:
+        df_filtrado = df_kpi
+
+    # Calcula el promedio de Accesos por cada 100 hogares por provincia en 2022 para las provincias en provincias_criterio
+    promedio_accesos_por_provincia = df_filtrado[df_filtrado['Año'] == 2022].groupby('Provincia')['Accesos por cada 100 hogares'].mean()
+
+    # Crea el gráfico de barras para las provincias en provincias_criterio en 2022
+    plt.figure(figsize=(12, 6))
+    sns.barplot(x=promedio_accesos_por_provincia.index, y=promedio_accesos_por_provincia.values, palette='viridis')
+    plt.axhline(y=60, color='red', linestyle='--', label='60 Accesos por cada 100 hogares')
+    plt.xlabel('Provincia')
+    plt.ylabel('Promedio de Accesos por cada 100 hogares')
+    plt.title('Promedio de Accesos por cada 100 hogares por Provincia en 2022')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
     
+    # Muestra el gráfico usando st.pyplot() con la figura de Matplotlib
+    st.pyplot()
+
+def plot_correlacion_tecnologia_penetracion(df_kpi, provincias_criterio, filtro_activado=True):
+    st.header("Correlación entre Tecnologías y Accesos por cada 100 hogares")
+
+    # Filtrar el dataframe según las provincias_criterio seleccionadas
+    df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_criterio)]
+
+    # Verificar si hay datos después de aplicar el filtro
+    if df_filtrado.empty:
+        st.error("No hay datos disponibles para las provincias seleccionadas.")
+        return
+
+    # Crear un gráfico de líneas para cada tecnología
+    fig, axes = plt.subplots(figsize=(12, 6))
+
+    # Graficar tecnologías
+    for tecnologia in ['ADSL', 'Cablemodem', 'Fibra optica', 'Wireless']:
+        sns.lineplot(data=df_filtrado, x='Año', y=tecnologia, label=f'{tecnologia}')
+
+    # Graficar la velocidad media con una línea roja de referencia en 60 Accesos por cada 100 hogares
+    sns.lineplot(data=df_filtrado.groupby('Año')['Accesos por cada 100 hogares'].mean().reset_index(), x='Año', y='Accesos por cada 100 hogares', color='red', label='Accesos por cada 100 hogares Media (Promedio)')
+    plt.axhline(y=60, color='red', linestyle='--', label='60 Accesos por cada 100 hogares (Referencia)')
+
+    # Configurar el gráfico
+    plt.xlabel('Año')
+    plt.ylabel('Accesos por cada 100 hogares')
+    plt.title('Correlación entre Tecnologías y Accesos por cada 100 hogares')
+    plt.legend()
+    plt.grid(True)
+
+    # Mostrar el gráfico en Streamlit
+    st.pyplot(fig)
+
+def calcular_alteracion_penetracion(df_kpi, provincias_seleccionadas):
+    # Filtrar el dataframe según las provincias seleccionadas
+    df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_seleccionadas)]
+
+    # Obtener los porcentajes de tecnología respecto al total de tecnología
+    df_filtrado['ADSL'] = df_filtrado['ADSL'] / df_filtrado['Total Tecnologia']
+    df_filtrado['Fibra optica'] = df_filtrado['Fibra optica'] / df_filtrado['Total Tecnologia']
+
+    # Calcular los porcentajes de disminución/adición de ADSL y Fibra Óptica para alcanzar el 20% de mejora
+    correlacion_tecnologia_penetracion = df_filtrado[['ADSL', 'Fibra optica', 'Accesos por cada 100 hogares', 'Total Tecnologia']].corr()['Accesos por cada 100 hogares']
+    correlacion_fibra_penetracion = correlacion_tecnologia_penetracion['Fibra optica']
+    correlacion_adsl_penetracion = -correlacion_tecnologia_penetracion['ADSL']
+
+    porcentaje_aumento_penetracion = 20  # Aumento del 20%
+    disminucion_adsl_necesaria = (porcentaje_aumento_penetracion / 100) * correlacion_adsl_penetracion 
+    aumento_fibra_necesaria = (porcentaje_aumento_penetracion / 100) * correlacion_fibra_penetracion
+
+    # Calcular el total de accesos nuevos para ADSL y Fibra Óptica
+    total_accesos_nuevos_adsl = disminucion_adsl_necesaria * df_filtrado['Total Tecnologia'].sum()
+    total_accesos_nuevos_fibra = aumento_fibra_necesaria * df_filtrado['Total Tecnologia'].sum()
+
+    return disminucion_adsl_necesaria, aumento_fibra_necesaria, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra
+
+
     
 # calidad, tecnologia kpi
-#este
+
 def plot_promedio_velocidad(df_kpi):
     # Calcula el promedio de Mbps por provincia en 2022 para todas las provincias
     promedio_mbps_por_provincia_total = df_kpi[df_kpi['Año'] == 2022].groupby('Provincia')['Mbps (Media de bajada)'].mean()
@@ -401,10 +499,6 @@ def plot_tendencia_tecnologia(df_kpi):
     plt.tight_layout()
     plt.show()
 
-# y este para el kpi
-
-   
-   
 def plot_correlacion_tecnologia_velocidad(df_kpi, provincias_criterio, filtro_activado=True):
     st.header("Correlación entre Tecnologías y Velocidad de Internet")
 
@@ -437,8 +531,6 @@ def plot_correlacion_tecnologia_velocidad(df_kpi, provincias_criterio, filtro_ac
     # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
     
-
-
 def calcular_alteracion_tecnologia(df_kpi, provincias_seleccionadas):
     # Filtrar el dataframe según las provincias seleccionadas
     df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_seleccionadas)]

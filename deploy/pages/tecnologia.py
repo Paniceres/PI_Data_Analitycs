@@ -14,6 +14,7 @@ provincias_criterio = calcular_provincias_criterio(df_kpi)
 
 
 def show(df_kpi, provincias_criterio):
+    st.sidebar.title("KPI Velocidad")
     st.set_option('deprecation.showPyplotGlobalUse', False)
     st.write("Título")
     st.write("Subtítulo")
