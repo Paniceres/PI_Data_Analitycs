@@ -40,7 +40,12 @@ def show(df_kpi, provincias_criterio, filtro_activado=True, tasa_mejora=None):
         st.error("No hay datos disponibles para las provincias seleccionadas.")
         return
     
-    st.sidebar.slider("Tasa de mejora", 1.0, 100.0, 1.0)
+    st.sidebar.slider("Tasa de mejora", 1.0, 100.0, 2.0)
+    
+    # Check if tasa_mejora is None, and assign a default value if necessary
+    if tasa_mejora is None:
+        tasa_mejora = 2.0 
+
     # Calcular el KPI
     kpi = kpi_obligatorio(df_kpi, provincias_criterio, filtro_activado=True, tasa_mejora=tasa_mejora)
     # Mostrar el KPI
