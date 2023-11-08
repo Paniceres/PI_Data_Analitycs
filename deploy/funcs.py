@@ -405,29 +405,25 @@ def plot_correlacion_tecnologia_penetracion(df_kpi, provincias_criterio, filtro_
     # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
 
+
 def calcular_alteracion_penetracion(df_kpi, provincias_seleccionadas):
     # Filtrar el dataframe según las provincias seleccionadas
     df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_seleccionadas)]
 
-    # Obtener los porcentajes de tecnología respecto al total de tecnología
-    df_filtrado['ADSL'] = df_filtrado['ADSL'] / df_filtrado['Total Tecnologia']
-    df_filtrado['Fibra optica'] = df_filtrado['Fibra optica'] / df_filtrado['Total Tecnologia']
-
-    # Calcular los porcentajes de disminución/adición de ADSL y Fibra Óptica para alcanzar el 20% de mejora
-    correlacion_tecnologia_penetracion = df_filtrado[['ADSL', 'Fibra optica', 'Accesos por cada 100 hogares', 'Total Tecnologia']].corr()['Accesos por cada 100 hogares']
+    # Calcular las correlaciones entre las tecnologías y el número de accesos por cada 100 hogares
+    correlacion_tecnologia_penetracion = df_filtrado[['ADSL', 'Fibra optica', 'Wireless', 'Accesos por cada 100 hogares']].corr()['Accesos por cada 100 hogares']
     correlacion_fibra_penetracion = correlacion_tecnologia_penetracion['Fibra optica']
     correlacion_adsl_penetracion = -correlacion_tecnologia_penetracion['ADSL']
+    correlacion_wireless_penetracion = correlacion_tecnologia_penetracion['Wireless']
 
-    porcentaje_aumento_penetracion = 20  # Aumento del 20%
-    disminucion_adsl_necesaria = (porcentaje_aumento_penetracion / 100) * correlacion_adsl_penetracion 
-    aumento_fibra_necesaria = (porcentaje_aumento_penetracion / 100) * correlacion_fibra_penetracion
+    porcentaje_aumento_penetracion = 10  # Aumento del 10%
+    
+    # Calcular el total de accesos nuevos para ADSL, Fibra Óptica y Wireless
+    total_accesos_nuevos_adsl = (porcentaje_aumento_penetracion / 100) * correlacion_adsl_penetracion * df_filtrado['Total Tecnologia'].sum()
+    total_accesos_nuevos_fibra = (porcentaje_aumento_penetracion / 100) * correlacion_fibra_penetracion * df_filtrado['Total Tecnologia'].sum()
+    total_accesos_nuevos_wireless = (porcentaje_aumento_penetracion / 100) * correlacion_wireless_penetracion * df_filtrado['Total Tecnologia'].sum()
 
-    # Calcular el total de accesos nuevos para ADSL y Fibra Óptica
-    total_accesos_nuevos_adsl = disminucion_adsl_necesaria * df_filtrado['Total Tecnologia'].sum()
-    total_accesos_nuevos_fibra = aumento_fibra_necesaria * df_filtrado['Total Tecnologia'].sum()
-
-    return disminucion_adsl_necesaria, aumento_fibra_necesaria, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra
-
+    return total_accesos_nuevos_adsl, total_accesos_nuevos_fibra, total_accesos_nuevos_wireless
 
     
 # calidad, tecnologia kpi
@@ -534,10 +530,6 @@ def plot_correlacion_tecnologia_velocidad(df_kpi, provincias_criterio, filtro_ac
 def calcular_alteracion_tecnologia(df_kpi, provincias_seleccionadas):
     # Filtrar el dataframe según las provincias seleccionadas
     df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_seleccionadas)]
-
-    # Obtener los porcentajes de tecnología respecto al total de tecnología
-    df_filtrado['ADSL'] = df_filtrado['ADSL'] / df_filtrado['Total Tecnologia']
-    df_filtrado['Fibra optica'] = df_filtrado['Fibra optica'] / df_filtrado['Total Tecnologia']
 
     # Calcular los porcentajes de disminución/adición de ADSL y Fibra Óptica para alcanzar el 20% de mejora
     correlacion_tecnologia_velocidad = df_filtrado[['ADSL', 'Fibra optica', 'Mbps (Media de bajada)', 'Total Tecnologia']].corr()['Mbps (Media de bajada)']
