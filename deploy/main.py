@@ -46,7 +46,7 @@ except FileNotFoundError:
 # -------------- logo
 
 # Interactividad con Streamlit
-st.title('Proyecto: Análisis de ENACOM: Validad y Penetración de servicio en torno a tecnologías.')
+st.title('Proyecto: Análisis de ENACOM: Calidad y Penetración de servicio en torno a tecnologías.')
 
 pagina_seleccionada = st.sidebar.radio('Selecciona una página:',
                                        ['Contexto', 'Criterio', 'Penetración', 'Tecnología'])
