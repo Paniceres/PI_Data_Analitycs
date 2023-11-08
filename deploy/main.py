@@ -28,7 +28,7 @@ df_kpi = data_load.dataframes['kpi']
 provincias_criterio = calcular_provincias_criterio(df_kpi)
 
 # Cargar el logo desde el archivo
-logo_path = '/static/ENACOM_logo.png'
+logo_path = './static/ENACOM_logo.png'
 logo = Image.open(logo_path)
 
 # Mostrar el logo en Streamlit
