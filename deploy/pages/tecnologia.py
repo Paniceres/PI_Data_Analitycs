@@ -16,8 +16,9 @@ provincias_criterio = calcular_provincias_criterio(df_kpi)
 def show(df_kpi, provincias_criterio):
     st.sidebar.title("KPI Velocidad")
     st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.write("Título")
-    st.write("Subtítulo")
+    st.write("Relación: Tecnología y Velocidad")
+    st.write('''En torno a un KPI deseado del 10% de aumento en la velocidad del servicio, 
+             determinamos la distribución de tecnologías en pos del objetivo''')
 
     # Agrega un botón para activar o desactivar el filtro de provincias_criterio
     filtro_activado = st.checkbox("Filtrar por provincias seleccionadas", value=True)
@@ -57,7 +58,7 @@ def show(df_kpi, provincias_criterio):
     
 
     # Mostrar los KPIs como tarjetas
-    st.write("### Aumento de Velocidad en un 10% Trimestral")
+    st.write("### Para conseguir un aumento de Velocidad en un 10% Trimestral:")
     tarjeta_adsl_html = f"""
         <div style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: .25rem; padding: .75rem 1.25rem; cursor: pointer;" onclick="adslClicked()">
             Disminuir ADSL en {disminucion_adsl_necesaria:.2f}%, equivalente a: {total_accesos_nuevos_adsl:.0f} accesos

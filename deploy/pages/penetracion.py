@@ -15,16 +15,10 @@ provincias_criterio = calcular_provincias_criterio(df_kpi)
 
 def show(df_kpi, provincias_criterio, filtro_activado=True):
     st.sidebar.title("KPI Penetracion")
-    st.write('''
-             Al analizar los datos, encontramos que la tecnología inalámbrica (como 4G o 5G) muestra una correlación positiva 
-más fuerte con la tasa de penetración en comparación con tecnologías como ADSL.
-La razón radica en su naturaleza inalámbrica, lo que permite llegar a áreas donde la instalación de cables sería difícil o costosa. 
-En zonas remotas o densamente pobladas, donde instalar cables es complicado, las conexiones inalámbricas son altamente beneficiosas. 
-Además, la tecnología inalámbrica ofrece flexibilidad y accesibilidad, facilitando que más personas se conecten a Internet sin complicaciones.
-En contraste, tecnologías como ADSL, que dependen de conexiones por cable, pueden tener limitaciones de alcance y dificultades de instalación, especialmente en áreas geográficamente desafiantes.''')
     st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.write("Título")
-    st.write("Subtítulo")
+    st.write("Relación: Tecnología y Penetración.")
+    st.write('''En torno a un KPI deseado del 10% de aumento en la penetración del servicio, 
+             determinamos la distribución de tecnologías en pos del objetivo''')
     
    # Agrega un botón para activar o desactivar el filtro de provincias_criterio
     filtro_activado = st.checkbox("Filtrar por provincias seleccionadas", value=True)
@@ -64,7 +58,7 @@ En contraste, tecnologías como ADSL, que dependen de conexiones por cable, pued
         return
 
     # Mostrar los KPIs como tarjetas
-    st.write("### Aumento de Velocidad en un 10% Trimestral")
+    st.write("### Para conseguir un aumento de Penetración de un 10% Trimestral")
     tarjeta_adsl_html = f"""
         <div style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: .25rem; padding: .75rem 1.25rem; cursor: pointer;" onclick="adslClicked()">
             Disminuir ADSL en {disminucion_adsl_necesaria:.2f}%, equivalente a: {total_accesos_nuevos_adsl:.0f} accesos

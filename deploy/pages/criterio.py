@@ -58,7 +58,7 @@ def show(df_kpi, provincias_criterio):
     # Se toma la decisión de convertir los ingresos a dólares, para analizar la relación entre los ingresos y el valor del dólar en pesos argentinos.
     # """)
     
-    # st.header("4. Comparación entre Ingresos en Dólares y Tasa de Crecimiento de Ingresos")
+    # st.header("Comparación entre Ingresos en Dólares y Tasa de Crecimiento de Ingresos")
     # img_bytes = plot_dolares_ingresos_tasaIngresos(df_kpi)
     # st.image(img_bytes, use_column_width=True)
     # st.write('''
