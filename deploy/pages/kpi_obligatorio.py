@@ -45,9 +45,3 @@ def show(df_kpi, provincias_criterio, filtro_activado=True, tasa_mejora=None):
     kpi = kpi_obligatorio(df_kpi, provincias_criterio, filtro_activado=True, tasa_mejora=tasa_mejora)
     # Mostrar el KPI
     st.write(f"KPI: {kpi:.2f}")
-
-    # Crear un slider para seleccionar la tasa de mejora
-    tasa_mejora = st.slider("Tasa de mejora", 0.0, 100.0, 2.0)
-
-    # Mostrar el KPI con la tasa de mejora seleccionada
-    show(df_kpi, provincias_criterio, filtro_activado=True, tasa_mejora=tasa_mejora)
