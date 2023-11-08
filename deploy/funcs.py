@@ -575,6 +575,6 @@ def kpi_obligatorio(df_kpi, provincias_criterio, filtro_activado=True, tasa_mejo
     # Calcular el KPI
     acceso_actual = df_filtrado['Accesos por cada 100 hogares'].sum()
     nuevo_acceso = acceso_actual + (acceso_actual * tasa_mejora / 100)
-    kpi = (nuevo_acceso / acceso_actual) / acceso_actual * 100
+    kpi = (nuevo_acceso - acceso_actual) / acceso_actual * 100
 
     return kpi
