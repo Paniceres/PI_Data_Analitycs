@@ -416,12 +416,13 @@ def calcular_alteracion_penetracion(df_kpi, provincias_seleccionadas):
     correlacion_adsl_penetracion = -correlacion_tecnologia_penetracion['ADSL']
     correlacion_wireless_penetracion = correlacion_tecnologia_penetracion['Wireless']
 
-    porcentaje_aumento_penetracion = 10  # Aumento del 10%
-    
-    # Calcular el total de accesos nuevos para ADSL, Fibra Óptica y Wireless
-    total_accesos_nuevos_adsl = (porcentaje_aumento_penetracion / 100) * correlacion_adsl_penetracion * df_filtrado['Total Tecnologia'].sum()
-    total_accesos_nuevos_fibra = (porcentaje_aumento_penetracion / 100) * correlacion_fibra_penetracion * df_filtrado['Total Tecnologia'].sum()
-    total_accesos_nuevos_wireless = (porcentaje_aumento_penetracion / 100) * correlacion_wireless_penetracion * df_filtrado['Total Tecnologia'].sum()
+    porcentaje_aumento_penetracion = 10  # Aumento del 10% para un año
+
+    # Calcular el total de accesos nuevos para un trimestre (ajustado desde el valor anual)
+    df_filtrado['Total Tecnologia Trimestral'] = df_filtrado['Total Tecnologia'] / 4  # Dividir por 4 para obtener datos trimestrales
+    total_accesos_nuevos_adsl = (porcentaje_aumento_penetracion / 100) * correlacion_adsl_penetracion * df_filtrado['Total Tecnologia Trimestral']
+    total_accesos_nuevos_fibra = (porcentaje_aumento_penetracion / 100) * correlacion_fibra_penetracion * df_filtrado['Total Tecnologia Trimestral']
+    total_accesos_nuevos_wireless = (porcentaje_aumento_penetracion / 100) * correlacion_wireless_penetracion * df_filtrado['Total Tecnologia Trimestral']
 
     return total_accesos_nuevos_adsl, total_accesos_nuevos_fibra, total_accesos_nuevos_wireless
 
