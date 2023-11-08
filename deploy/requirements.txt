@@ -3,6 +3,3 @@ pandas
 matplotlib
 seaborn
 streamlit
-PIL
-io
-os
