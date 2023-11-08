@@ -561,3 +561,20 @@ def calcular_alteracion_tecnologia(df_kpi, provincias_seleccionadas, filtro_acti
     aumento_fibra_necesaria = total_accesos_nuevos_fibra / df_filtrado['Total Tecnologia'].sum() * 100
 
     return disminucion_adsl_necesaria, aumento_fibra_necesaria, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra
+
+
+# kpi obligatorio
+
+def kpi_obligatorio(df_kpi, provincias_criterio, filtro_activado=True, tasa_mejora=2):
+    # Filtrar el DataFrame según las provincias seleccionadas
+    if filtro_activado:
+        df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_criterio)]
+    else:
+        df_filtrado = df_kpi
+
+    # Calcular el KPI
+    acceso_actual = df_filtrado['Accesos por cada 100 hogares']
+    nuevo_acceso = acceso_actual + (acceso_actual * tasa_mejora / 100)
+    kpi = (nuevo_acceso / acceso_actual) * 100
+
+    return kpi
