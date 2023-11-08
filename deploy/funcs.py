@@ -531,21 +531,21 @@ def plot_correlacion_tecnologia_velocidad(df_kpi, provincias_criterio, filtro_ac
     # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
     
-def calcular_alteracion_tecnologia(df_kpi, provincias_seleccionadas):
-    # Filtrar el dataframe según las provincias seleccionadas
-    df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_seleccionadas)]
+def calcular_alteracion_tecnologia(df_filtrado):
+    # Calcular las correlaciones entre las tecnologías y el número de accesos por cada 100 hogares
+    correlacion_tecnologia_penetracion = df_filtrado[['ADSL', 'Fibra optica', 'Accesos por cada 100 hogares']].corr()['Accesos por cada 100 hogares']
+    correlacion_fibra_penetracion = correlacion_tecnologia_penetracion['Fibra optica']
+    correlacion_adsl_penetracion = -correlacion_tecnologia_penetracion['ADSL']
 
-    # Calcular los porcentajes de disminución/adición de ADSL y Fibra Óptica para alcanzar el 20% de mejora
-    correlacion_tecnologia_velocidad = df_filtrado[['ADSL', 'Fibra optica', 'Mbps (Media de bajada)', 'Total Tecnologia']].corr()['Mbps (Media de bajada)']
-    correlacion_fibra_velocidad = correlacion_tecnologia_velocidad['Fibra optica']
-    correlacion_adsl_velocidad = -correlacion_tecnologia_velocidad['ADSL']
+    porcentaje_aumento_penetracion = 10  # Aumento del 10% para un trimestre
 
-    porcentaje_aumento_velocidad = 20  # Aumento del 20%
-    disminucion_adsl_necesaria = (porcentaje_aumento_velocidad / 100) * correlacion_adsl_velocidad 
-    aumento_fibra_necesaria = (porcentaje_aumento_velocidad / 100) * correlacion_fibra_velocidad
+    # Calcular el total de accesos nuevos para un trimestre (ajustado desde el valor anual)
+    df_filtrado['Total Tecnologia Trimestral'] = df_filtrado['Total Tecnologia'] / 4  # Dividir por 4 para obtener datos trimestrales
+    total_accesos_nuevos_adsl = (porcentaje_aumento_penetracion / 100) * correlacion_adsl_penetracion * df_filtrado['Total Tecnologia Trimestral'].sum()
+    total_accesos_nuevos_fibra = (porcentaje_aumento_penetracion / 100) * correlacion_fibra_penetracion * df_filtrado['Total Tecnologia Trimestral'].sum()
 
-    # Calcular el total de accesos nuevos para ADSL y Fibra Óptica
-    total_accesos_nuevos_adsl = disminucion_adsl_necesaria * df_filtrado['Total Tecnologia'].sum()
-    total_accesos_nuevos_fibra = aumento_fibra_necesaria * df_filtrado['Total Tecnologia'].sum()
-    
+    # Calcular la disminución o aumento necesario para cada tecnología, excluyendo Wireless
+    disminucion_adsl_necesaria = -total_accesos_nuevos_adsl / df_filtrado['Total Tecnologia'].sum() * 100
+    aumento_fibra_necesaria = total_accesos_nuevos_fibra / df_filtrado['Total Tecnologia'].sum() * 100
+
     return disminucion_adsl_necesaria, aumento_fibra_necesaria, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra
