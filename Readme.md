@@ -23,7 +23,7 @@
     <a href="https://github.com/Paniceres/PI_Data_Analytics"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="#">View Demo</a>
+    <a href="#Deploy">View Deploy</a>
     ·
     <a href="https://github.com/Paniceres/PI_Data_Analytics/issues">Report Bug</a>
     ·
@@ -110,6 +110,8 @@ This is an example of how to list things you need to use the software and how to
 <!-- USAGE EXAMPLES -->
 ## Usage
 
+<a href="#Deploy">View Deploy</a>
+
 <img src="/src/usage.png" alt="Streamlit localhost" width="1000" height="520">
 
 
@@ -192,6 +194,7 @@ Project Link: [https://github.com/Paniceres/PI_Data_Analytics](https://github.co
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[Deploy]: https://enacom-data-analytics-paniceres.streamlit.app/
 [contributors-shield]: https://img.shields.io/github/contributors/Paniceres/PI_Data_Analytics.svg?style=for-the-badge
 [contributors-url]: https://github.com/Paniceres/PI_Data_Analytics/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/Paniceres/PI_Data_Analytics.svg?style=for-the-badge
