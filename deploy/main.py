@@ -6,6 +6,9 @@ import numpy as np
 import streamlit as st
 from PIL import Image
 
+import sys
+print(sys.executable)
+
 from data_loader import DataLoader
 from funcs import calcular_provincias_criterio, plot_correlacion_hogar_hab, plot_criterio_provincia, plot_tasa_crecimiento_penetracion_criterio, plot_correlacion_ingresos_dolar, plot_dolares_ingresos_tasaIngresos, plot_dolares_ingresos_tasaPenetracion, plot_correlacion_tasaIngresos_tasaPenetracion, plot_promedio_velocidad, matriz_correlacion_velocidad, plot_tendencia_tecnologia, plot_correlacion_tecnologia_velocidad
 
