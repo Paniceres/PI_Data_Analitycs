@@ -45,3 +45,4 @@ def show(df_kpi, provincias_criterio, filtro_activado=True, tasa_mejora=None):
     kpi = kpi_obligatorio(df_kpi, provincias_criterio, filtro_activado=True, tasa_mejora=tasa_mejora)
     # Mostrar el KPI
     st.write(f"KPI: {kpi:.2f}")
+
