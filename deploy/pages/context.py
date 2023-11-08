@@ -1,5 +1,16 @@
 import streamlit as st
-from funcs import plot_correlacion_hogar_hab, plot_correlacion_ingresos_dolar
+from funcs import calcular_provincias_criterio, plot_correlacion_hogar_hab, plot_correlacion_ingresos_dolar
+
+from data_loader import DataLoader
+
+# Crear una instancia de la clase DataViz
+data_load = DataLoader(data_directory='../data/readytogo')
+data_load.load_data()
+df_kpi = data_load.dataframes['kpi']
+df_penetracion = data_load.dataframes['penetracion']
+
+# Filtrar provincias con tasa de Penetracion > 60% en 2022
+provincias_criterio = calcular_provincias_criterio(df_kpi)
 
 def show(df_penetracion, df_kpi):
     st.sidebar.title("Contexto")  
