@@ -50,7 +50,7 @@ elif pagina_seleccionada == 'Criterio':
 elif pagina_seleccionada == 'Penetración':
     Penetracion(df_kpi)  
 elif pagina_seleccionada == 'Tecnología':
-    Tecnologia(df_kpi)  
+    Tecnologia(df_kpi, provincias_criterio)  
 
 
     

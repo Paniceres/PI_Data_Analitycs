@@ -294,10 +294,45 @@ def plot_correlacion_tasaIngresos_tasaPenetracion(df_kpi):
     Observando al detalle, notamos la volatilidad de los datos, no se nota una correlación directa.'''  
     return text
 
-# penetracion kpi
+# accesibilidad, penetracion kpi
 
+def plot_matriz_correlacion_penetracion(df_kpi):
+    # Selecciona las columnas relevantes para la matriz de correlación
+    columnas_correlacion = ['ADSL', 'Cablemodem', 'Fibra optica', 'Wireless', 'Tasa de Crecimiento Penetracion']
 
-# tecnologia kpi
+    # Calcula la matriz de correlación
+    matriz_correlacion = df_kpi[columnas_correlacion].corr()
+
+    # Muestra la matriz de correlación
+    st.header("Matriz de Correlación entre Tecnologías y Tasa de Crecimiento de Penetración")
+    st.write(matriz_correlacion)
+     
+def plot_matriz_correlacion_penetracion_interactiva(df_kpi, provincias_criterio):
+    # Lista desplegable para seleccionar la provincia
+    provincia_seleccionada = st.selectbox("Selecciona una provincia:", provincias_criterio)
+
+    # Filtra el DataFrame por la provincia seleccionada
+    df_provincia = df_kpi[df_kpi['Provincia'] == provincia_seleccionada]
+
+    # Selecciona las columnas relevantes para la matriz de correlación
+    columnas_correlacion = ['ADSL', 'Cablemodem', 'Fibra optica', 'Wireless', 'Tasa de Crecimiento Penetracion']
+
+    # Calcula la matriz de correlación para la provincia seleccionada
+    matriz_correlacion_provincia = df_provincia[columnas_correlacion].corr()
+
+    # Estilo para la matriz de correlación
+    sns.set(font_scale=1.2)
+    plt.figure(figsize=(8, 6))
+    st.header(f"Matriz de Correlación para {provincia_seleccionada}")
+    sns.heatmap(matriz_correlacion_provincia, annot=True, cmap='coolwarm', fmt=".2f", linewidths=.5, annot_kws={"size": 14})
+    plt.xticks(rotation=45)
+    plt.yticks(rotation=0)
+    plt.tight_layout()
+    st.pyplot()
+    
+    
+    
+# calidad, tecnologia kpi
 #este
 def plot_promedio_velocidad(df_kpi):
     # Calcula el promedio de Mbps por provincia en 2022 para todas las provincias
@@ -319,6 +354,28 @@ def plot_promedio_velocidad(df_kpi):
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show()
+
+def plot_promedio_velocidad_interactivo(df_kpi, provincias_criterio, filtro_activado=True):
+    if filtro_activado:
+        df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_criterio)]
+    else:
+        df_filtrado = df_kpi
+
+    # Calcula el promedio de Mbps por provincia en 2022 para las provincias en provincias_criterio
+    promedio_mbps_por_provincia = df_filtrado[df_filtrado['Año'] == 2022].groupby('Provincia')['Mbps (Media de bajada)'].mean()
+
+    # Crea el gráfico de barras para las provincias en provincias_criterio en 2022
+    plt.figure(figsize=(12, 6))
+    sns.barplot(x=promedio_mbps_por_provincia.index, y=promedio_mbps_por_provincia.values, palette='viridis')
+    plt.axhline(y=50, color='red', linestyle='--', label='50 Mbps')
+    plt.xlabel('Provincia')
+    plt.ylabel('Promedio de Mbps')
+    plt.title('Promedio de Mbps por Provincia en 2022')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    
+    # Muestra el gráfico usando st.pyplot() con la figura de Matplotlib
+    st.pyplot()
 
 def matriz_correlacion_velocidad(df_kpi):
     correlacion = df_kpi[['ADSL', 'Cablemodem', 'Fibra optica', 'Wireless', 'Mbps (Media de bajada)']].corr()
@@ -345,44 +402,62 @@ def plot_tendencia_tecnologia(df_kpi):
     plt.show()
 
 # y este para el kpi
-def plot_correlacion_tecnologia_velocidad(df_kpi):
-    # Filtrar las provincias con un promedio de menos de 50 Mbps de bajada para el año 2022
-    provincias_filtradas = df_kpi[df_kpi['Año'] == 2022].groupby('Provincia')['Mbps (Media de bajada)'].mean()
-    provincias_criterio = provincias_filtradas[provincias_filtradas < 50].index.tolist()
 
-    # Si hay provincias que cumplen el criterio, mostrar el gráfico; de lo contrario, mostrar un mensaje de error
-    if not provincias_criterio:
-        st.error("No hay provincias disponibles que cumplan el criterio de menos de 50 Mbps de bajada para el año 2022.")
+   
+   
+def plot_correlacion_tecnologia_velocidad(df_kpi, provincias_criterio, filtro_activado=True):
+    st.header("Correlación entre Tecnologías y Velocidad de Internet")
+
+    # Filtrar el dataframe según las provincias_criterio seleccionadas
+    df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_criterio)]
+
+    # Verificar si hay datos después de aplicar el filtro
+    if df_filtrado.empty:
+        st.error("No hay datos disponibles para las provincias seleccionadas.")
         return
-    
-    # Seleccionar una provincia de las que cumplen el criterio
-    provincia_seleccionada = st.selectbox("Selecciona una provincia", provincias_criterio)
 
-    # Obtener el promedio de velocidad de bajada para la provincia seleccionada
-    promedio_provincia = df_kpi[(df_kpi['Provincia'] == provincia_seleccionada)]
-    
-    # Crear un gráfico de líneas para cada tecnología en la provincia seleccionada
-    fig, axes = plt.subplots(1, 2, figsize=(18, 6))
-    
-    # Graficar tecnologías en la primera columna
+    # Crear un gráfico de líneas para cada tecnología
+    fig, axes = plt.subplots(figsize=(12, 6))
+
+    # Graficar tecnologías
     for tecnologia in ['ADSL', 'Cablemodem', 'Fibra optica', 'Wireless']:
-        df_temp = df_kpi[(df_kpi['Provincia'] == provincia_seleccionada)]
-        sns.lineplot(data=df_temp, x='Año', y=tecnologia, label=f'{tecnologia}', ax=axes[0])
-    axes[0].set_xlabel('Año')
-    axes[0].set_ylabel('Cantidad')
-    axes[0].set_title(f'Tecnologías en {provincia_seleccionada}')
-    axes[0].legend(title='Tecnología', bbox_to_anchor=(1.05, 1), loc='upper left')
-    
-    # Graficar velocidad media en la segunda columna
-    sns.lineplot(data=promedio_provincia, x='Año', y='Mbps (Media de bajada)', color='green', label='Velocidad Media', ax=axes[1])
-    axes[1].axhline(y=50, color='red', linestyle='--', label='50 Mbps')
-    axes[1].set_xlabel('Año')
-    axes[1].set_ylabel('Mbps')
-    axes[1].set_title(f'Promedio de Velocidad en {provincia_seleccionada}')
-    axes[1].legend(title='Línea', bbox_to_anchor=(1.05, 1), loc='upper left')
-    
-    # Ajustar el espacio entre subgráficos
-    plt.tight_layout()
+        sns.lineplot(data=df_filtrado, x='Año', y=tecnologia, label=f'{tecnologia}')
+
+    # Graficar la velocidad media con una línea roja de referencia en 50 Mbps
+    sns.lineplot(data=df_filtrado.groupby('Año')['Mbps (Media de bajada)'].mean().reset_index(), x='Año', y='Mbps (Media de bajada)', color='red', label='Velocidad Media (Promedio)')
+    plt.axhline(y=50, color='red', linestyle='--', label='50 Mbps (Referencia)')
+
+    # Configurar el gráfico
+    plt.xlabel('Año')
+    plt.ylabel('Mbps')
+    plt.title('Correlación entre Tecnologías y Velocidad de Internet')
+    plt.legend()
+    plt.grid(True)
+
+    # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
+    
 
 
+def calcular_alteracion_tecnologia(df_kpi, provincias_seleccionadas):
+    # Filtrar el dataframe según las provincias seleccionadas
+    df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_seleccionadas)]
+
+    # Obtener los porcentajes de tecnología respecto al total de tecnología
+    df_filtrado['ADSL'] = df_filtrado['ADSL'] / df_filtrado['Total Tecnologia']
+    df_filtrado['Fibra optica'] = df_filtrado['Fibra optica'] / df_filtrado['Total Tecnologia']
+
+    # Calcular los porcentajes de disminución/adición de ADSL y Fibra Óptica para alcanzar el 20% de mejora
+    correlacion_tecnologia_velocidad = df_filtrado[['ADSL', 'Fibra optica', 'Mbps (Media de bajada)', 'Total Tecnologia']].corr()['Mbps (Media de bajada)']
+    correlacion_fibra_velocidad = correlacion_tecnologia_velocidad['Fibra optica']
+    correlacion_adsl_velocidad = -correlacion_tecnologia_velocidad['ADSL']
+
+    porcentaje_aumento_velocidad = 20  # Aumento del 20%
+    disminucion_adsl_necesaria = (porcentaje_aumento_velocidad / 100) * correlacion_adsl_velocidad
+    aumento_fibra_necesaria = (porcentaje_aumento_velocidad / 100) * correlacion_fibra_velocidad
+
+    # Calcular el total de accesos nuevos para ADSL y Fibra Óptica
+    total_accesos_nuevos_adsl = disminucion_adsl_necesaria * df_filtrado['Total Tecnologia'].sum()
+    total_accesos_nuevos_fibra = aumento_fibra_necesaria * df_filtrado['Total Tecnologia'].sum()
+    
+    return disminucion_adsl_necesaria, aumento_fibra_necesaria, total_accesos_nuevos_adsl, total_accesos_nuevos_fibra

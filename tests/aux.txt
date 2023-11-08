@@ -1,0 +1,32 @@
+def show(df_kpi, provincias_criterio):
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+    st.write("Título")
+    st.write("Subtítulo")
+    
+    # Agrega un botón para activar o desactivar el filtro de provincias_criterio
+    filtro_activado = st.checkbox("Filtrar por provincias seleccionadas", value=True)
+    
+    # Llama a la función para mostrar el gráfico interactivo de promedio de velocidad
+    plot_promedio_velocidad_interactivo(df_kpi, provincias_criterio, filtro_activado)
+
+    # Filtrar el dataframe según el estado del filtro
+    if filtro_activado:
+        opciones_provincias = ['Provincias selectas'] + list(df_kpi['Provincia'].unique())
+        multiselect_key = 'multiselect_key'  # Asigna una clave única para el widget st.multiselect
+        provincias_seleccionadas = st.multiselect("Selecciona provincias", opciones_provincias, default=['Provincias selectas'], key=multiselect_key)
+
+        if 'Provincias selectas' in provincias_seleccionadas:
+            df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_criterio)]
+        else:
+            df_filtrado = df_kpi[df_kpi['Provincia'].isin(provincias_seleccionadas)]
+            
+        # Verificar si hay datos después de aplicar el filtro
+        if df_filtrado.empty:
+            st.error("No hay datos disponibles para las provincias seleccionadas.")
+            return
+    else:
+        # Si el filtro está desactivado, mostrar datos para todas las provincias
+        df_filtrado = df_kpi
+
+    # Llama a la función para mostrar el gráfico de correlación entre tecnologías y velocidad
+    plot_correlacion_tecnologia_velocidad(df_filtrado, provincias_criterio)
