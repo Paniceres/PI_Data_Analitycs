@@ -15,7 +15,7 @@ from pages.penetracion import show as Penetracion
 from pages.tecnologia import show as Tecnologia
 
 # Crear una instancia de la clase DataViz
-data_load = DataLoader(data_directory='../data/readytogo')
+data_load = DataLoader(data_directory='./data/readytogo')
 data_load.load_data()
 
 # Acceder a los DataFrames cargados
